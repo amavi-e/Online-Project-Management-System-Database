@@ -1,0 +1,619 @@
+CREATE DATABASE Builders_Citadel;
+
+
+CREATE TABLE Job
+(
+    Job_ID char(5),
+    Job_Title varchar(60) UNIQUE NOT NULL,
+    Min_Salary decimal (10,2) NOT NULL,
+    Max_Salary decimal (10,2) NOT NULL, 
+    CONSTRAINT job_id_pk PRIMARY KEY (Job_ID)
+);
+
+INSERT INTO 
+Job (Job_ID, Job_Title, Min_Salary, Max_Salary)
+VALUES
+('JB001', 'Construction Assistant', 12384345.20, 12436865.02),
+('JB002', 'Equipment Operator', 14800802.80, 15404917.20),
+('JB003', 'Inspector', 15102860.00, 15114338.17),
+('JB004', 'General Labourer', 15811184.13, 15854378.31),
+('JB005', 'Construction Foreperson', 17217260.40, 17368289.00),
+('JB006', 'Scheduler', 19331660.80, 19482689.40),
+('JB007', 'Field Engineer', 20237832.40, 20513006.51),
+('JB008', 'Estimator', 20841946.80, 20992975.40),
+('JB009', 'Surveyor', 21748118.40, 21892501.74),
+('JB010', 'Building Services Director', 22956347.20, 22992594.06),
+('JB011', 'Safety Engineer', 30205720.00, 30266131.44),
+('JB012', 'Civil Engineer', 25825890.60, 25861533.35), 
+('JB013', 'Database Management Architect', 26188359.24, 26248770.68),
+('JB014', 'Tile Setter', 13048871.04, 13079076.76),
+('JB015', 'Roofer', '15404917.20', '15465328.64'),
+('JB016', 'Construction Supervisor', 24164576.00, 24768690.40),
+('JB017', 'Project Supervisor', 25674862.00, 25976919.20),
+('JB018', 'Interior Supervisor', 24500000.00, 24600000.00),
+('JB019', 'Roofer Supervisor', 24400000.00, 24450000.00),
+('JB020', 'Safety Supervisor', 24500000.00, 25000000.00);
+
+
+CREATE TABLE Job_Supervisor
+(
+    Job_ID char(5),
+    Allowance decimal(7,2),
+    Electronic_device varchar(50),
+    CONSTRAINT job_id_pk PRIMARY KEY (Job_ID),
+    CONSTRAINT job_id_fk FOREIGN KEY (Job_ID) REFERENCES Job(Job_ID)
+);
+
+INSERT INTO 
+Job_Supervisor (Job_ID, Allowance, Electronic_device)
+VALUES
+('JB016', 50000.00, 'Laptop'),
+('JB017', 70000.00, 'Tablet'),
+('JB018', 50000.00, 'Tablet'),
+('JB019', NULL, 'Mobile Phone'),
+('JB020', 55000.00, NULL);
+
+
+CREATE TABLE Customer
+(
+    Customer_ID char(5),
+    Customer_Type varchar(10) NOT NULL,
+    Customer_Name varchar(100) NOT NULL,
+    Customer_Email varchar(50) UNIQUE NOT NULL,
+    Customer_Site_No varchar(20) NOT NULL,
+    Customer_Street varchar(60) NOT NULL, 
+    Customer_Town varchar(50),
+    Customer_City varchar(50) NOT NULL,
+    Customer_Postal_Code varchar(5),
+    CONSTRAINT cust_id_pk PRIMARY KEY (Customer_ID)
+);
+
+INSERT INTO 
+Customer(Customer_ID, Customer_Type, Customer_Name, Customer_Email, Customer_Site_No, Customer_Street, Customer_Town, Customer_City, Customer_Postal_Code)
+VALUES
+('C0001', 'Individual', 'Dasun Perera', 'dasunperera@gmail.com', '973/4/C', 'Saman Road', 'Malabe', 'Colombo', '10115'),
+('C0002', 'Individual', 'Sudath De Silva', 'sudathd@gmail.com', 'F/43', 'Matha Road', NULL, 'Galle', '80000'),
+('C0003','Company', 'Movenpick', 'mp@movenpick.lk', '24', 'Srimath Anagarika Dharmapala Mawatha', NULL, 'Colombo', '00300'), 
+('C0004', 'Company', 'Damro', 'damro@damro.lk', '361', 'Kandy Road', 'Nittabuwa', 'Gampaha', '11880'), 
+('C0005', 'Company', 'ABC School', 'abcschool@gmail.com', '894/3', 'Duke Road', NULL, 'Kandy', '20000'),
+('C0006', 'Individual', 'Ann Perera', 'annperera@gmail.com', 'C/99', 'Rama Road', 'Bentota', 'Galle', '80500'),
+('C0007', 'Individual', 'Sandun Fonaseka', 'sfonaseka@gmail.com', '56/4/D', 'Mal Mawatha', 'Beliatta', 'Hambantota', '82400'),
+('C0008', 'Company', 'Lanka Tiles', 'lankatiles@gmail.com', '117', 'Katugastota Road', 'Daskara', 'Kandy', NULL),
+('C0009', 'Individual', 'Sampath Sudasinghe', 'sampathsuda@gmail.com', '14/C', 'Duke Road', 'Borella', 'Colombo', '00800'),
+('C0010', 'Individual', 'Ama Rathnayake', 'ama81@gmail.com', '78/3/A', '8th Street', NULL, 'Badulla', '90000'),
+('C0011', 'Company', 'Softlogic', 'softlogiccare@softlogic.lk', 'L/2', 'Dalada Veediya', 'Galhinna', 'Kandy', '20152'),
+('C0012', 'Individual', 'Hasaka Perera', 'hasakap@yahoo.com', 'G/67', 'Batapotha Road', NULL, 'Vanuniya', '43000'), 
+('C0013', 'Company', 'Commercial Bank', 'commercialbank@combank.lk', '232', 'Galle Road', 'Pettah', 'Colombo', '01100'),
+('C0014', 'Company', 'CIAP', 'ciap@gmail.com', '458', 'Barnes Road', 'Kantalee', 'Trincomalee', '31300'),
+('C0015', 'Individual', 'Krishanthi Alwis', 'krishalwis@gmail.com', '5/3/F', 'Robert Road', 'Battaramulla', 'Colombo', '10120');
+
+
+CREATE TABLE Customer_Contact
+(
+    Customer_ID char(5),
+    Customer_Contact_No char(10) UNIQUE, 
+    CONSTRAINT cust_id_contact_pk PRIMARY KEY (Customer_ID, Customer_Contact_No),
+    CONSTRAINT cust_id_fk FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+INSERT INTO 
+Customer_Contact (Customer_ID, Customer_Contact_No)
+VALUES
+('C0001', '0772090906'),
+('C0001', '0112094890'),
+('C0001', '0764569008'),
+('C0002', '0713459875'),
+('C0002', '0719845679'),
+('C0003', '0117450450'),
+('C0004', '0112553098'),
+('C0005', '0810997880'),
+('C0006', '0754560997'),
+('C0006', '0773456654'),
+('C0006', '0914561233'),
+('C0007', '0773654506'),
+('C0007', '0477789900'),
+('C0008', '0114526700'),
+('C0009', '0772345559'),
+('C0009', '0742234597'), 
+('C0009', '0112455677'),
+('C0010', '0774060607'), 
+('C0011', '0115978978'),
+('C0012', '0763450965'),
+('C0012', '0245698322'), 
+('C0012', '0761231233'),
+('C0013', '0112591437'),
+('C0014', '0264569004'),
+('C0015', '0776454532'),
+('C0015', '0112345667'),
+('C0015', '0772344456');
+
+
+CREATE TABLE Renovation_Project
+(
+    Project_ID char(7),
+    Start_Date date NOT NULL,
+    Est_Complete_Date date NOT NULL,
+    Current_Progress varchar(100),
+    Actual_Complete_Date date, 
+    Site_No varchar(20) NOT NULL,
+    Location_Street varchar(70) NOT NULL, 
+    Location_City varchar(70) NOT NULL,
+    Renovation_Extent varchar(70),
+    Addition varchar(3),
+    Destruction varchar(3),
+    Additional_Space varchar(30),
+    Customer_ID char(5),
+    CONSTRAINT customer_id_fk2 FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    CONSTRAINT project_id_pk PRIMARY KEY (Project_ID)
+);
+
+INSERT INTO 
+Renovation_Project(Project_ID, Start_Date, Est_Complete_Date, Current_Progress, Actual_Complete_Date, Site_No, Location_Street, Location_City, Renovation_Extent, Addition, Destruction, Additional_Space, Customer_ID)
+VALUES
+('PR20001', '2022-02-04', '2023-12-19', 'Complete', '2024-01-02', '124', 'Alexandra Rd', 'Kandy', '60% of the building being renovated', 'Yes', 'No', 'Required', 'C0002'),
+('PR20002', '2018-05-12', '2020-01-01', 'Complete', '2021-03-05', '567', 'Idama Mawatha', 'Colombo', '75% of the building being renovated', 'No', 'Yes', 'Not required', 'C0001'),
+('PR20003', '2022-12-09', '2024-02-03', 'Ongoing', NULL, '16', 'Idunil Mawatha', 'Hambantota', '75% of the building being renovated', 'Yes', 'No', 'Not required', 'C0003'),
+('PR20004', '2022-04-17', '2023-03-12', 'Ongoing', NULL, '156', 'Bakers Street', 'Nuwara Eliya', '80% of the building being renovated', 'Yes', 'Yes', 'Required', 'C0006'),
+('PR20005', '2021-06-17', '2022-02-06', 'Complete', '2023-12-13', '895/F', 'Jayasinghe Rd', 'Gampaha', '30% if the building being renovated', 'No', 'Yes', 'Required', 'C0002'),
+('PR20006', '2021-06-23', '2023-05-04', 'Ongoing', NULL, '78', 'Lorensz Road', 'Colombo', '85% of the building being renovated', 'Yes', 'Yes', 'Not Required', 'C0004'),
+('PR20007', '2021-08-12', '2023-03-12', 'Complete', '2022-12-27', '607', 'Maheswari Road', 'Kandy', '20% of the building being renovated', 'Yes', 'No', 'Required', 'C0005'),
+('PR20008', '2024-01-31', '2025-09-17', 'Ongoing', NULL, '85/4/F', 'Pepin Lane', 'Kegalle', '33% of the building being renovated', 'Yes', 'No', 'Required', 'C0007'),
+('PR20009', '2022-04-16', '2024-11-30', 'Complete', '2024-01-14', '34', 'Ramya Rd', 'Colombo', '90% of the building being renovated', 'Yes', 'Yes', 'Required', 'C0008'),
+('PR20010', '2021-05-12', '2022-12-13', 'Complete', '2023-11-17', '56/7/F', 'Saliya Rd', 'Kandy', '87% of the building being renovated', 'Yes', 'No', 'Not Required', 'C0007');
+
+
+CREATE TABLE Construction_Project
+(
+    Project_ID char(7),
+    Start_Date date NOT NULL,
+    Est_Complete_Date date NOT NULL,
+    Current_Progress varchar(100),
+    Actual_Complete_Date date,
+    Site_No varchar(20) NOT NULL,
+    Location_Street varchar(70) NOT NULL, 
+    Location_City varchar(70) NOT NULL,
+    Soil_Type varchar(20),
+    Natural_Environment varchar(100),
+    Facilities varchar(100),
+    Customer_ID char(5),
+    CONSTRAINT customer_id_fk3 FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    CONSTRAINT project_id_pk2 PRIMARY KEY (Project_ID)
+);
+
+INSERT INTO 
+Construction_Project(Project_ID, Start_Date, Est_Complete_Date, Current_Progress, Actual_Complete_Date, Site_No, Location_Street, Location_City, Soil_Type, Natural_Environment, Facilities, Customer_ID)
+VALUES
+('PR20011', '2016-03-04', '2021-01-04', 'Complete', '2021-12-15', '567', 'Solomon Avenue', 'Colombo', 'Clay', 'Minimal', 'Available in close proximity to the area', 'C0009'),
+('PR20012', '2018-04-16', '2022-12-14', 'Complete', '2023-08-14', '78', 'Sriya Rd', 'Kandy', 'Silt', 'Present with a surrounding lake', 'Only Hospitals in close proximity', 'C0010'),
+('PR20013', '2020-05-12', '2023-12-15', 'Complete', '2024-01-14', '865/5/D', 'Maliyar Road', 'Jaffna', 'Clay', 'Present in abundance', 'Not available in close proximity', 'C0011'),
+('PR20014', '2023-03-12', '2024-12-03', '15% complete', NULL, '90/5/G', 'Temple Ln', 'Hambantota', 'Loam', 'Minimal', 'Available in close proximity', 'C0012'),
+('PR20015', '2024-01-02', '2026-01-02', '5% complete', NULL, '348', 'Bagatalle Road', 'Kandy', 'Gravel', 'Present in abundance', 'Available in close proximity', 'C0013'),
+('PR20016', '2021-11-23', '2023-12-13', 'Complete', '2024-01-31', 'F/56', 'Dhammarama Road', 'Gampaha', 'Peat', 'Minimal', 'Only restaurants available in close priximity', 'C0014'),
+('PR20017', '2019-06-30', '2022-11-07', 'Complete', '2023-01-16', '45', 'Fonseka Road', 'Galle', 'Loam', 'Present in abundance', 'Available in the close proximity', 'C0015'),
+('PR20018', '2022-04-29', '2023-12-31', 'Complete', '2024-01-01', '64', 'Marie Road', 'Kandy', 'Clay', 'Minimal', 'Available in close proximity', 'C0010'),
+('PR20019', '2023-11-05', '2027-01-17', '15% complete', NULL, '579', 'Lily Avenue', 'Colombo', 'Silt', 'Minimal', 'Available in close proximity', 'C0012'),
+('PR20020', '2020-06-12', '2022-07-19', 'Complete', '2023-01-18', '84/3/G', 'Malalika Lane', 'Jaffna', 'Loam', 'Present in abundance with paddy fields', 'Only restaurants availabe in close proximity', 'C0004'),
+('PR20021', '2022-12-14', '2024-02-05', '95% complete', NULL, '34', 'Nimal Road', 'Galle', 'Loam', 'Present in abundance', 'Only hospitals available in close proximity', 'C0013');
+
+
+CREATE TABLE Renovation_Payment
+(
+    Payment_No char(7),
+    Total_Amount decimal(14,2) NOT NULL,
+    Instalment_Plan varchar(30) NOT NULL, 
+    Paying_Amount decimal (14,2) NOT NULL,
+    Transaction_Date date,
+    Payment_Status varchar(30) NOT NULL,
+    Customer_ID char(5),
+    Payment_Duration varchar(30),
+    Project_ID char(7),
+    CONSTRAINT payment_rproject_fk FOREIGN KEY (Project_ID) REFERENCES Renovation_Project(Project_ID),
+    CONSTRAINT customer_id_fk FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    CONSTRAINT payment_no_pk PRIMARY KEY (Payment_No)
+);
+
+INSERT INTO 
+Renovation_Payment(Payment_No, Total_Amount, Instalment_Plan, Paying_Amount, Transaction_Date, Payment_Status, Customer_ID, Payment_Duration, Project_ID)
+VALUES
+('P123092', 679000000.00, 'Upfront', 679000000.00, '2022-04-15', 'Complete', 'C0002', NULL, 'PR20001'),
+('P123093', 894500000.00, 'Three Months', 223625000.00, '2022-02-03', 'Ongoing', 'C0003', '4 Months', 'PR20003'),
+('P123094', 904300000.00, 'Monthly', 75358333.33, '2022-05-16', 'Ongoing', 'C0006', '12 Months', 'PR20004'),
+('P123095', 894500000.00, 'Three Months', 223625000.00, '2022-05-15', 'Ongoing', 'C0003', '4 Months', 'PR20003'),
+('P123096', 894500000.00, 'Three Months', 223625000.00, '2022-08-20', 'Ongoing', 'C0003', '4 Months', 'PR20003'),
+('P123097', 894500000.00, 'Three Months', 223625000.00, '2022-11-02', 'Complete', 'C0003', '4 Months', 'PR20003'),
+('P123098', 904300000.00, 'Monthly', 75358333.33, '2022-06-20', 'Ongoing', 'C0006', '12 Months', 'PR20004'),
+('P123099', 876030000.00, 'Monthly', 5475187.50, '2021-06-18', 'Ongoing', 'C0002', '16 Months', 'PR20005'),
+('P123100', 876030000.00, 'Monthly', 5475187.50, '2022-02-07', 'Ongoing', 'C0002', '16 Months', 'PR20005'),
+('P123101', 679030000.00, 'Upfront', 679030000.00, '2022-07-14', 'Complete', 'C0004', NULL, 'PR20006'),
+('P123102', 780000000.00, 'Monthly', 65000000.00, '2021-09-13', 'Ongoing', 'C0005', '12 Months', 'PR20007'),
+('P123103', 780000000.00, 'Monthly', 65000000.00, '2022-10-15', 'Ongoing', 'C0005', '12 Months', 'PR20007'),
+('P123104', 834560000.00, 'Three Months', 208640000.00, '2024-02-13', 'Ongoing', 'C0007', '4 Months', 'PR20008'),
+('P123105', 659400000.00, 'Upfront', 659400000.00, '2024-01-14', 'Complete', 'C0008', NULL, 'PR20009'),
+('P123106', 764390000.00, 'Three Months', 191097500.00, '2021-06-04', 'Ongoing', 'C0007', '4 Months', 'PR20010');
+
+
+CREATE TABLE Construction_Payment
+(
+    Payment_No char(7),
+    Total_Amount decimal(14,2) NOT NULL,
+    Instalment_Plan varchar(30) NOT NULL, 
+    Paying_Amount decimal (14,2) NOT NULL,
+    Transaction_Date date,
+    Payment_Status varchar(30) NOT NULL,
+    Customer_ID char(5),
+    Payment_Duration varchar(30),
+    Project_ID char(7),
+    CONSTRAINT payment_cproject_fk FOREIGN KEY (Project_ID) REFERENCES Construction_Project(Project_ID),
+    CONSTRAINT customer_id_fk4 FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID),
+    CONSTRAINT payment_no_pk2 PRIMARY KEY (Payment_No)
+);
+
+INSERT INTO
+Construction_Payment(Payment_No, Total_Amount, Instalment_Plan, Paying_Amount, Transaction_Date, Payment_Status, Customer_ID, Payment_Duration, Project_ID)
+VALUES
+('P123107', 5564580950.00, 'Three Months', 1391145238.00, '2017-01-02', 'Ongoing', 'C0009', '4 Months', 'PR20011'),
+('P123108', 5564580950.00, 'Three Months', 1391145238.00, '2017-11-13', 'Ongoing', 'C0009', '4 Months', 'PR20011'),
+('P123109', 5564580950.00, 'Three Months', 1391145238.00, '2018-03-17', 'Ongoing', 'C0009', '4 Months', 'PR20011'),
+('P123110', 5564580950.00, 'Three Months', 1391145238.00, '2019-03-17', 'Complete', 'C0009', '4 Months', 'PR20011'),
+('P123111', 6854390000.00, 'Monthly', 571199166.70, '2018-05-06', 'Ongoing', 'C0010', '12 Months', 'PR20012'),
+('P123112', 6854390000.00, 'Monthly', 571199166.70, '2018-11-06', 'Ongoing', 'C0010', '12 Months', 'PR20012'),
+('P123113', 4509403200.00, 'Monthly', 322100228.60, '2019-05-19', 'Ongoing', 'C0011', '14 Months', 'PR20013'),
+('P123114', 3345034500.00, 'Upfront', 3345034500.00, '2024-11-12', 'Complete', 'C0012', NULL, 'PR20014'),
+('P123115', 5420596043.00, 'Monthly', 451716336.90, '2024-01-03', 'Ongoing', 'C0013', '12 Months', 'PR20015'),
+('P123116', 5420596043.00, 'Monthly', 451716336.90, '2024-02-03', 'Ongoing', 'C0013', '12 Months', 'PR20015'),
+('P123117', 5420596043.00, 'Monthly', 451716336.90, '2024-03-12', 'Ongoing', 'C0013', '12 Months', 'PR20015'),
+('P123118', 7859305966.00, 'Monthly', 604561997.40, '2021-11-30', 'Ongoing', 'C0014', '13 Months', 'PR20016'),
+('P123119', 7859305966.00, 'Monthly', 604561997.40, '2022-01-14', 'Ongoing', 'C0014', '13 Months', 'PR20016'),
+('P123120', 7859305966.00, 'Monthly', 604561997.40, '2022-04-05', 'Ongoing', 'C0014', '13 Months', 'PR20016'),
+('P123121', 7859305966.00, 'Monthly', 604561997.40, '2022-05-07', 'Ongoing', 'C0014', '13 Months', 'PR20016'),
+('P123122', 7859305966.00, 'Monthly', 604561997.40, '2022-08-16', 'Ongoing', 'C0014', '13 Months', 'PR20016'),
+('P123123', 4539586765.00, 'Three Months', 1134896691.00, '2020-04-15', 'Ongoing', 'C0015', '4 Months', 'PR20017'),
+('P123124', 6854390000.00, 'Upfront', 6854390000.00, '2022-11-13', 'Complete', 'C0010', NULL, 'PR20018'),
+('P123125', 5394857676.00, 'Three Months', 1348714419.00, '2023-12-31', 'Ongoing', 'C0012', '4 Months', 'PR20019'),
+('P123126', 5394857676.00, 'Three Months', 1348714419.00, '2024-02-28', 'Ongoing', 'C0012', '4 Months', 'PR20019'),
+('P123127', 3210405969.00, 'Monthly', 267533830.80, '2021-05-23', 'Ongoing', 'C0004', '12 Months', 'PR20020'),
+('P123128', 4569000000.00, 'Upfront', 4569000000.00, '2023-11-13', 'Complete', 'C0013', NULL, 'PR20021');
+
+
+CREATE TABLE Staff
+(
+    Staff_ID char(5),
+    First_Name varchar(70) NOT NULL,
+    Middle_Name varchar(70),
+    Surname varchar(70) NOT NULL,
+    Initials varchar(20),
+    NIC varchar(12) UNIQUE,
+    Staff_Email varchar(70) UNIQUE,
+    Staff_House_No varchar(20) NOT NULL,
+    Staff_Street varchar(50) NOT NULL, 
+    Staff_Town varchar(30),
+    Staff_City varchar(30) NOT NULL,
+    Staff_Postal_Code varchar(6),
+    Salary decimal(10,2) NOT NULL,
+    Date_of_Birth date,
+    Job_ID char(5),
+    Supervisor_ID char(5),
+    CONSTRAINT staff_supervisor_fk FOREIGN KEY (Supervisor_ID) REFERENCES Staff(Staff_ID), 
+    CONSTRAINT job_id_fk2 FOREIGN KEY (Job_ID) REFERENCES Job(Job_ID),
+    CONSTRAINT staff_id_pk PRIMARY KEY (Staff_ID)
+);
+
+INSERT INTO 
+Staff(Staff_ID, First_Name, Middle_Name, Surname, Initials, NIC, Staff_Email, Salary, Date_of_Birth, Staff_House_No, Staff_Street, Staff_Town, Staff_City, Staff_Postal_Code, Job_ID, Supervisor_ID)
+VALUES
+('S0020', 'Asoka', 'Buwanajith', 'De Silva', NULL, '200004069284', 'asokads@gmail.com', 24767690.40, '2000-04-16', '7/65/F', 'Mallika Lane', 'Deraniyagala', 'Kegalle', '71430', 'JB016', NULL),
+('S0022', 'Shaarvi', 'Upekya', 'Konar', NULL, '840903594V', 'shaarvik@gmail.com', 25774862.00, '1984-09-21', '124/5/C', 'Navalar Road', 'Nelliady', 'Jaffna', '91042', 'JB017', NULL),
+('S0023', 'Upesha', 'Madhavi', 'Rajapaksha', 'R.M.', '860400394V', 'upeshar@gmail.com', 24511000.00, '1986-04-09', 'D/33', 'Fernando Road', 'Bibile', 'Monaragala', '91500', 'JB018', NULL),
+('S0024', 'Kasun', NULL, 'Thennakoon', NULL, '910903594V', 'kasuntk@gmail.com', 24440000.00, '1991-09-21', '98/D', 'Isiwari Road', 'Borella', 'Colombo', '00800', 'JB019', NULL),
+('S0025', 'Malithma', 'Sadami', 'Konara', NULL, '200106093958', 'malithmak@gmail.com', 24566000.00, '2000-10-10', '785/4/F', 'Kalyani Rd', 'Elpitiya', 'Galle', '80400', 'JB020', NULL),
+('S0001', 'Thumila', 'Channa', 'Fernando', NULL, '99012095V', 'thumilac@citadel.com', 24470000.00, '1999-12-12', '567/4/F', 'Sri Dharmarama Road', 'Battaramulla', 'Colombo', '10120', 'JB001', 'S0020'), 
+('S0002', 'Rakitha', NULL, 'Gajanayake', 'G.M.', '980509485V', 'rakithag@gmail.com', 12390000.00, '1998-05-19', 'H/78', 'Keppetipola Road', 'Daulagala', 'Kandy', '20306', 'JB002', 'S0020'),
+('S0003', 'Amilka', 'Sadaru', 'Godagama', NULL, '200406978V', 'amilkas@gmail.com', 12420000.00, '2000-04-16', '786/5/G', 'Flower Road', 'Borella', 'Colombo', '00800', 'JB002', 'S0020'),
+('S0004', 'Asela', 'Kamal', 'Fernando', NULL, '920604566V', 'aselaf@gmail.com', 14985000.00, '1992-06-03', '23/8/G', 'Sangamitta Mawatha', 'Middeniya', 'Hambantota', '82270', 'JB003', NULL),
+('S0005', 'Bimsara', NULL, 'Subasinghe', 'S.M', '200007030495', 'bimsaras@gmail.com', 15112338.17, '2000-07-30', '45/6/J', 'Elvitigala Mawatha', 'Ahungalla', 'Galle', '80562', 'JB004', 'S0022'),
+('S0006', 'Lasanthi', NULL, 'Balasooriya', NULL, '940905643V', 'lasanthib@gmail.com', 1584000.00, '1994-09-14', '67/4/F', 'T.B. Jayah Mawatha', 'Kantale', 'Trincomalee', '31300', 'JB005', 'S0020'),
+('S0007', 'Adodya', 'Chamodi', 'Rajapaksha', 'R.M', '960405939V', 'atodyar@gmail.com', 17257260.40, '1996-04-27', 'F/99/4', 'Sangamitta Mawatha', 'Thalawathugoda', 'Colombo', '10116', 'JB006', NULL),
+('S0008', 'Chanupa', 'Dilneth', 'Subasinghe', NUll, '980805454V', 'chanupas@gmail.com', 15831184.13, '1998-08-15', '6/8/A', 'Jayantha Mawatha', 'Galagedara', 'Kandy', '20100', 'JB005', NULL),
+('S0009', 'Kasuni', 'Chamodya', 'Gunatilaka', NULL, '200101193948', 'kasunig@gmail.com', 19351660.80, '2001-11-17', 'T/89', 'Olcott Mawatha', 'Boossa', 'Galle', '80270', 'JB007', NULL),
+('S0010', 'Bimsara', NULL, 'Edirisinghe', NULL, '870209384V', 'bimsarae@gmail.com', 20337832.40, '1987-02-05', '34/5/D', 'Isipathana Mawatha', 'Bulnewa', 'Anuradhapura', '50171', 'JB008', 'S0023'), 
+('S0011', 'Manel', NULL, 'Abesinghe', 'A.M.', '850905867V', 'manela@gmail.com', 20861946.80, '1985-09-08', '34/5/B', 'Green Street', 'Wallawatte', 'Colombo', '00600', 'JB009', 'S0025'),
+('S0012', 'Manusha', NULL, 'Ranatunga', NULL, '9702049584V', 'manushar@gmail.com', 21798118.40, '1997-02-05', 'D/78', 'Janadhipathi Mawatha', 'Kundasale', 'Kandy', '20168', 'JB010', 'S0020'), 
+('S0013', 'Sinali', 'Kavya', 'Harishchandra', NULL, '200108034567', 'sinalih@gamil.com', 22976347.20, '2001-08-16', '5/43/F', 'Flower Road', 'Battaramulla', 'Colombo', '10120', 'JB011', 'S0025'),
+('S0014', 'Pavan', NULL, 'De Silva', NULL, '810904532V', 'pavand@gmail.com', 25845890.60, '1981-09-23', '7/45', 'Rifle Street', 'Buttala', 'Monaragala', ' 91100', 'JB009', NULL),
+('S0015', 'Kailash', NULL, 'Kannan', NULL, '840125967V', 'kalilashk@gmail.com', 26198359.24, '1983-12-07', '8/7/F', 'Gopal Lane', 'Moolai', 'Jaffna', NULL, 'JB012', NULL),
+('S0016', 'Sandun', 'Devin', 'Gajanayake', 'G.M.', '199306036046', 'sandung@gmail.com', 25861500.00, '1993-06-20', '67/4/L', 'St. Benedict’s Street', 'Narahenpita', 'Colombo', '00500', 'JB013', NULL), 
+('S0017', 'Chamali', 'Navodya', 'Hettiarachchi', 'H.M.', '790503958V', 'chamalih@gmail.com', 26198359.20, '1979-05-22', 'G/87', 'Anula Road', 'Pussellawa', 'Kandy', '20580', 'JB014', 'S0023'),
+('S0018', 'Asela', 'Kamal', 'Fernando', NULL, '860309586V', 'aselakf@gmail.com', 25861533.35, '1986-03-07', '567/4/F', 'Daya Road', 'Batapola', 'Galle', '80320', 'JB013', NULL), 
+('S0019', 'Anula', NULL, 'Soysa', NULL, '940103938V', 'anulas@gmail.com', 13058871.00, '1994-01-28', '973/4/D', 'Dhammarama Road', 'Middeniya', 'Hambantota', '82270', 'JB015', 'S0024'),
+('S0021', 'Sahen', NULL, 'Kodikara', 'K.M.', '750603958V', 'sagenk@gmail.com', 13054917.2, '1975-06-13', '7/45', 'Pothuarawa Road', 'Malabe', 'Colombo', '10115', 'JB014', 'S0023'),
+('S0026', 'Supun', NULL, 'Ranasinghe', 'R.A.', '980904958V', 'supunr@gmail.com', 15110000.00, '1998-09-12', '56/F', 'Mary Road', 'Ekala', 'Gampaha', '11380', 'JB004', 'S0020'),
+('S0027', 'Asha', NULL, 'Fonaseka', NULL, '860603948V', 'ashaf@gmail.com', 30215720.00, '1986-03-17', '73/5/G', 'Pamankada Road', 'Ambagaspitiya', 'Gampaha', '11052', 'JB012', NULL),
+('S0028', 'Amal', 'Kapuru', 'Sooriyaarachchi', NULL, '740204857V', 'amals@gmail.com', 17217260.40, '1974-02-14', '45/G', 'Quarry Road', 'Walasmulla', 'Hambantota', '82450', 'JB006', 'S0022'),
+('S0029', 'Malini', 'Eja', 'Rathnayake', NULL, '990604858V', 'malinir@gmail.com', 19381348.00, '1999-06-04', '874/3/C', 'Rasavalli Lane', 'Kaduwela', 'Colombo', '10640', 'JB007', NULL),
+('S0030', 'Saman', 'Madhawa', 'Perera', NULL, '880103948V', 'samanp@gmail.com', 21748118.40, '1988-01-19', '8/90', 'Saliya Road', 'Pussellawa', 'Kandy', '20580', 'JB010', 'S0020'),
+('S0031', 'Pavani', 'Lamya', 'Balasooriya', NULL, '950503948V', 'pavanib@gmail.com', 14811110.00, '1995-05-13', '749/3/F', 'Sinsapa Road', 'Ganewalpola', 'Anuradhapura', '50142', 'JB003', 'S0022');
+
+
+CREATE TABLE Staff_Tel_No
+(
+    Staff_ID char(5),
+    Staff_Contact char(10) UNIQUE,
+    CONSTRAINT staff_id_fk FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
+    CONSTRAINT staff_id_contact_pk PRIMARY KEY (Staff_ID, Staff_Contact)
+);
+
+INSERT INTO 
+Staff_Tel_No(Staff_ID, Staff_Contact)
+VALUES
+('S0001', '0772030306'),
+('S0001', '0762340984'),
+('S0001', '0112394959'),
+('S0002', '0710384894'),
+('S0002', '0117090923'),
+('S0003', '0230394858'),
+('S0003', '0112030549'),
+('S0003', '0777993142'),
+('S0004', '0773649201'),
+('S0005', '0234567891'),
+('S0005', '0712345678'),
+('S0005', '0723456789'),
+('S0006', '0778495062'),
+('S0006', '0118304956'),
+('S0007', '0779910103'),
+('S0008', '0740611344'),
+('S0008', '0115969294'),
+('S0008', '0772305060'), 
+('S0009', '0779293929'),
+('S0010', '0777666909'),
+('S0010', '0113049312'),
+('S0011', '0772112223'),
+('S0011', '0112334445'),
+('S0012', '0777733405'),
+('S0012', '0721219394'),
+('S0012', '0117203493'),
+('S0013', '0780202211'),
+('S0014', '0744677753'),
+('S0014', '0723424242'),
+('S0014', '0116902039'),
+('S0015', '0745566223'), 
+('S0016', '0777220011'),
+('S0016', '0113454548'),
+('S0017', '0773322454'),
+('S0018', '0779988066'),
+('S0018', '0117232321'),
+('S0019', '0772090905'),
+('S0019', '0764567441'),
+('S0019', '0115833423'), 
+('S0020', '0773652698'), 
+('S0021', '0775559003'),
+('S0021', '0779995532'),
+('S0021', '0114565444'),
+('S0022', '0778888022'),
+('S0022', '0112222334'),
+('S0023', '0777772934'),
+('S0023', '0766660440'),
+('S0023', '0117442111'),
+('S0024', '0776662233'),
+('S0025', '0749112333'),
+('S0026', '0756442212'),
+('S0026', '0773646436'),
+('S0026', '0112233322'),
+('S0027', '0732223112'),
+('S0027', '0794034933'),
+('S0028', '0733228844'),
+('S0029', '0111772933'),
+('S0029', '0772363637'),
+('S0029', '0113334455'),
+('S0030', '0743494954'),
+('S0031', '0777733326'),
+('S0031', '0117999448');
+
+
+CREATE TABLE Assignment
+(
+    Assignment_No char(5),
+    Assignment_Name varchar(100) NOT NULL,
+    Assignment_Description varchar(120),
+    CONSTRAINT assignment_no_pk PRIMARY KEY (Assignment_No)
+);
+
+INSERT INTO 
+Assignment(Assignment_No, Assignment_Name, Assignment_Description)
+VALUES
+('AS001', 'Clean the site', NULL),
+('AS002', 'Prepare materials', 'Materials for use such as pipe and wood'),
+('AS003', 'Discard waste', NULL),
+('AS004', 'Specify work space', 'Allocating the places to work'), 
+('AS005', 'Assistance', 'Helping with measuring, levelling and spacing'),
+('AS006', 'Operate vehicles', 'Drive and work with construction-class vehicles'),
+('AS007', 'Ensuring equipment is safe', NULL),
+('AS008', 'Ensure rules are followed', 'Issue citations for code violations or stop work due to safety hazards'),
+('AS009', 'Assemble temporary structures', 'Heavy lifting required'),
+('AS010', 'Maintain traffic', 'Direct traffic around work site'),
+('AS011', 'Load, Unload and organise materials', NULL),
+('AS012', 'Ensure all work is completed to schedule', NULL),
+('AS013', 'Train workers', NULL),
+('AS014', 'Handle employee schedules', NULL),
+('AS015', 'Maintain project timeline', NULL),
+('AS016', 'Share status report', 'The current situation of the project'),
+('AS017', 'Direct work crews', NULL),
+('AS018', 'Ensure project specifications are met', NULL),
+('AS019', 'Verify all stages follow regulations', 'All stages of the project should meet local, state and national regulations'),
+('AS020', 'Monitoring cost', 'Determine the number of goods and services a project requires'),
+('AS021', 'Suppliers', 'Building and maintaining relationships with suppliers'), 
+('AS022', 'Determine land boundary lines', 'Research land and survey records and land titles'),
+('AS023', 'Identify precise land features', NULL),
+('AS024', 'Manage essential services', 'These include water, electricity, gas, lighting, heating, A/C, security systems'),
+('AS025', 'Determine potential risks', 'Risks associated with chemicals, machinery, equipment'),
+('AS026', 'Design process and systems for safe working environment', NULL),
+('AS027', 'Determine environmental impact', NULL),
+('AS028', 'Create online database', 'Work with the client and ensure specified requirements are achieved'),
+('AS029', 'Cover the walls', NULL),
+('AS030', 'Ensure the proper placement of tiles', NULL),
+('AS031', 'Clean tiles', NULL),
+('AS032', 'Install roof', NULL),
+('AS033', 'Coordinate project schedule', NULL),
+('AS034', 'Track material order and delivery', NULL),
+('AS035', 'Oversee daily site operations', 'Ensure all tasks are carried out effectively'),
+('AS036', 'Lead final project stage', 'Final inspections and building openings'),
+('AS037', 'Ensure interior design meets client needs', NULL),
+('AS038', 'Ensure roof is leakage free', NULL),
+('AS039', 'Ensure safety protocols are followed', NULL);
+
+
+CREATE TABLE Renovation_Done
+(
+    Staff_ID char(5),
+    Assignment_No char(5),
+    Project_ID char(7),
+    Hours_Per_Week int(2) NOT NULL,
+    Assigned_Date date NOT NULL,
+    CONSTRAINT staff_id_fk2 FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
+    CONSTRAINT assignment_no_fk FOREIGN KEY (Assignment_No) REFERENCES Assignment(Assignment_No),
+    CONSTRAINT rproject_id_fk FOREIGN KEY (Project_ID) REFERENCES Renovation_Project(Project_ID),
+    CONSTRAINT done_pk PRIMARY KEY (Staff_ID,Assignment_No, Project_ID, Hours_Per_Week,Assigned_Date)
+);
+
+INSERT INTO
+Renovation_Done(Staff_ID, Assignment_No, Project_ID, Hours_Per_Week, Assigned_Date)
+VALUES
+('S0001', 'AS001', 'PR20001', 21, '2022-02-05'),
+('S0001', 'AS001', 'PR20001', 21, '2022-05-14'),
+('S0001', 'AS001', 'PR20003', 28, '2023-01-04'),
+('S0001', 'AS003', 'PR20001', 21, '2022-05-14'),
+('S0002', 'AS005', 'PR20004', 35, '2022-06-17'),
+('S0002', 'AS006', 'PR20004', 27, '2022-04-19'),
+('S0003', 'AS006', 'PR20004', 24, '2023-01-04'),
+('S0003', 'AS005', 'PR20005', 21, '2021-07-06'),
+('S0003', 'AS006', 'PR20007', 49, '2022-05-14'),
+('S0004', 'AS008', 'PR20006', 22, '2021-09-30'),
+('S0004', 'AS008', 'PR20006', 22, '2022-04-19'), 
+('S0004', 'AS008', 'PR20008', 21, '2024-02-04'),
+('S0004', 'AS008', 'PR20009', 23, '2023-10-19'),
+('S0005', 'AS009', 'PR20007', 54, '2021-09-12'),
+('S0005', 'AS010', 'PR20010', 35, '2021-06-01'),
+('S0005', 'AS011', 'PR20010', 40, '2021-06-01'),
+('S0006', 'AS013', 'PR20007', 35, '2021-10-18'),
+('S0007', 'AS014', 'PR20006', 30, '2022-12-04'),
+('S0008', 'AS013', 'PR20005', 37, '2021-07-25'),
+('S0009', 'AS018', 'PR20006', 36, '2022-03-14'),
+('S0011', 'AS022', 'PR20010', 35, '2021-06-17'),
+('S0012', 'AS024', 'PR20003', 32, '2023-02-14'),
+('S0013', 'AS026', 'PR20004', 45, '2022-06-17'),
+('S0014', 'AS023', 'PR20007', 45, '2021-09-24'),
+('S0014', 'AS022', 'PR20005', 36, '2021-07-02'),
+('S0015', 'AS027', 'PR20006', 17, '2022-02-15'),
+('S0016', 'AS028', 'PR20007', 50, '2022-02-02'),
+('S0017', 'AS029', 'PR20006', 55, '2022-01-17'),
+('S0017', 'AS029', 'PR20006', 54, '2022-05-13'),
+('S0018', 'AS028', 'PR20001', 45, '2022-07-13'),
+('S0018', 'AS028', 'PR20001', 46, '2023-05-28'),
+('S0019', 'AS032', 'PR20002', 55, '2018-12-14'),
+('S0019', 'AS032', 'PR20002', 55, '2019-08-17'),
+('S0020', 'AS034', 'PR20006', 26, '2021-07-28'),
+('S0022', 'AS035', 'PR20009', 50, '2022-06-27'),
+('S0022', 'AS035', 'PR20009', 50, '2022-08-19'),
+('S0022', 'AS035', 'PR20004', 49, '2022-05-04'),
+('S0023', 'AS037', 'PR20005', 45, '2022-09-03'),
+('S0024', 'AS038', 'PR20002', 35, '2020-08-19'),
+('S0025', 'AS039', 'PR20001', 45, '2022-12-14'),
+('S0027', 'AS027', 'PR20009', 20, '2022-11-06'),
+('S0029', 'AS017', 'PR20005', 38, '2023-08-21'),
+('S0029', 'AS018', 'PR20005', 33, '2023-08-21'),
+('S0030', 'AS024', 'PR20010', 50, '2022-04-18');
+
+
+CREATE TABLE Construction_Done
+(
+    Staff_ID char(5),
+    Assignment_No char(5),
+    Project_ID char(7),
+    Hours_Per_Week int(2) NOT NULL,
+    Assigned_Date date NOT NULL,
+    CONSTRAINT staff_id_fk3 FOREIGN KEY (Staff_ID) REFERENCES Staff(Staff_ID),
+    CONSTRAINT assignment_no_fk2 FOREIGN KEY (Assignment_No) REFERENCES Assignment(Assignment_No),
+    CONSTRAINT cproject_id_fk FOREIGN KEY (Project_ID) REFERENCES Construction_Project(Project_ID),
+    CONSTRAINT done_pk PRIMARY KEY (Staff_ID,Assignment_No, Project_ID, Hours_Per_Week,Assigned_Date)
+);
+
+INSERT INTO
+Construction_Done (Staff_ID, Assignment_No, Project_ID, Hours_Per_Week, Assigned_Date)
+VALUES
+('S0006', 'AS013', 'PR20011', 35, '2016-04-15'),
+('S0006', 'AS012', 'PR20011', 22, '2017-02-20'),
+('S0007', 'AS014', 'PR20012', 30, '2018-05-13'),
+('S0007', 'AS014', 'PR20012', 29, '2019-02-13'),
+('S0007', 'AS015', 'PR20013', 41, '2020-06-16'),
+('S0007', 'AS016', 'PR20013', 29, '2020-06-16'),
+('S0008', 'AS013', 'PR20014', 43, '2019-04-21'),
+('S0009', 'AS017', 'PR20015', 25, '2024-01-13'),
+('S0009', 'AS017', 'PR20015', 25, '2024-02-16'),
+('S0009', 'AS019', 'PR20015', 16, '2024-02-16'),
+('S0010', 'AS020', 'PR20016', 23, '2021-12-14'),
+('S0010', 'AS021', 'PR20016', 30, '2021-12-14'),
+('S0010', 'AS020', 'PR20016', 24, '2022-06-15'),
+('S0011', 'AS022', 'PR20017', 46, '2019-07-01'),
+('S0011', 'AS023', 'PR20017', 34, '2019-08-13'),
+('S0012', 'AS024', 'PR20018', 35, '2022-05-19'),
+('S0012', 'AS024', 'PR20018', 36, '2022-08-12'),
+('S0012', 'AS024', 'PR20012', 35, '2018-05-23'),
+('S0013', 'AS025', 'PR20019', 28, '2024-01-05'),
+('S0013', 'AS025', 'PR20015', 30, '2024-02-16'),
+('S0013', 'AS026', 'PR20019', 45, '2024-01-13'),
+('S0014', 'AS022', 'PR20011', 37, '2016-04-04'),
+('S0015', 'AS027', 'PR20020', 14, '2021-01-17'),
+('S0015', 'AS027', 'PR20013', 18, '2020-08-29'),
+('S0016', 'AS028', 'PR20021', 50, '2023-04-12'),
+('S0016', 'AS028', 'PR20011', 48, '2017-12-14'),
+('S0017', 'AS029', 'PR20018', 55, '2023-01-25'),
+('S0017', 'AS031', 'PR20019', 50, '2024-01-30'),
+('S0017', 'AS031', 'PR20016', 48, '2022-07-27'),
+('S0017', 'AS030', 'PR20015', 30, '2024-02-15'),
+('S0018', 'AS028', 'PR20011', 50, '2018-09-12'),
+('S0019', 'AS032', 'PR20013', 55, '2022-09-14'),
+('S0020', 'AS033', 'PR20014', 34, '2023-04-15'),
+('S0020', 'AS033', 'PR20014', 38, '2023-06-12'),
+('S0020', 'AS034', 'PR20021', 25, '2023-01-18'),
+('S0020', 'AS034', 'PR20017', 23, '2020-01-23'),
+('S0021', 'AS029', 'PR20011', 46, '2017-10-10'),
+('S0021', 'AS029', 'PR20011', 47, '2017-10-29'),
+('S0021', 'AS030', 'PR20012', 30, '2022-04-16'),
+('S0021', 'AS031', 'PR20011', 45, '2017-11-30'),
+('S0021', 'AS031', 'PR20014', 43, '2023-12-13'),
+('S0022', 'AS036', 'PR20020', 30, '2022-11-10'),
+('S0022', 'AS036', 'PR20013', 35, '2023-12-13'),
+('S0023', 'AS037', 'PR20011', 47, '2020-11-28'),
+('S0023', 'AS037', 'PR20014', 50, '2023-12-15'),
+('S0024', 'AS038', 'PR20020', 40, '2022-09-16'),
+('S0025', 'AS039', 'PR20012', 44, '2021-05-13'),
+('S0025', 'AS039', 'PR20017', 47, '2022-09-05'),
+('S0025', 'AS039', 'PR20017', 48, '2022-08-04'),
+('S0026', 'AS009', 'PR20015', 55, '2024-02-23'),
+('S0028', 'AS014', 'PR20019', 57, '2024-01-16'),
+('S0028', 'AS014', 'PR20019', 34, '2024-01-16'),
+('S0031', 'AS008', 'PR20013', 29, '2022-07-14'),
+('S0031', 'AS008', 'PR20017', 30, '2022-09-01');
+
+
+
+SELECT Project_ID, Start_Date, Est_Complete_Date, Current_Progress, Actual_Complete_Date, Site_No, Location_Street, Location_City, Customer_ID
+FROM Renovation_Project 
+WHERE Location_City IN ('Colombo', 'Kandy') 
+	AND Actual_Complete_Date IS NOT NULL
+	AND Actual_Complete_Date >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH)
+UNION ALL 
+SELECT Project_ID, Start_Date, Est_Complete_Date, Current_Progress, Actual_Complete_Date, Site_No, Location_Street, Location_City, Customer_ID
+FROM Construction_Project
+WHERE Location_City IN ('Colombo', 'Kandy') 
+	AND Actual_Complete_Date IS NOT NULL
+    	AND Actual_Complete_Date >= DATE_SUB(CURRENT_DATE(), INTERVAL 6 MONTH);
+
+
+
+SELECT RPro.Project_ID, C.Customer_Name AS 'Company Name', RPro.Est_Complete_Date AS 'Estimated Data of Completion', SUM(RPay.Paying_Amount) AS 'Total Amount Paid'
+FROM ((Customer AS C
+INNER JOIN Renovation_Project AS RPro ON C.Customer_ID = RPro.Customer_ID)
+INNER JOIN Renovation_Payment AS RPay ON RPro.Project_ID = RPay.Project_ID)
+WHERE C.Customer_Type = 'Company' AND RPro.Actual_Complete_Date IS NULL
+GROUP BY RPay.Project_ID;
+
